@@ -1,7 +1,7 @@
 ---
-description: 
+description: Product Requirements Document
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 # DinnerNotOnYourOwn.com PRD
 

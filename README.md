@@ -10,9 +10,10 @@ A collection of rule templates for [Cursor](https://cursor.sh/) to enhance your 
 
 1. **Copy the desired rule template** to your project's `.cursor/rules/` directory.
 
-2. **Apply the rule globally**
-
-3. **Customize the template**. Update the _Core features_ and _Technical Implementation_ sections to describe you idea or new feature. Update your _Roadmap_ with the status of your project as you progress.
+2. **Customize the template**. 
+- Update the _Product Vision_ and _Core features_ to describe your project
+- Update _Technical Implementation_ to describe the technical details of your features. 
+- Update your _Roadmap_ with the status of your project as you progress.
 
 ## How It Works
 
