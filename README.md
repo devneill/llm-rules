@@ -2,6 +2,12 @@
 
 A collection of rule templates for [Cursor](https://cursor.sh/) to enhance your development experience across different stacks and projects.
 
+Using a rule set like this avoids your LLM using the wrong tools, the wrong project structure and the wrong coding patterns. 
+
+The rule set provides your LLM with the full context of your project from the start, which leads to less wasted time from bug loops and rabbit holes. 
+
+Have a plan, share it your LLM, and stay on track.
+
 ## Available Templates
 
 - **Epic Stack Rules** (`epic-stack-rules.mdc`) - Rule template for projects using [Kent C. Dodds' Epic Stack](https://github.com/epicweb-dev/epic-stack), a comprehensive full-stack JavaScript framework.
