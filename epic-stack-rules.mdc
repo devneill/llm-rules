@@ -1,0 +1,139 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# DinnerNotOnYourOwn.com PRD
+
+**Product Vision:**
+A brief desription of you idea, why it exists and who it is for. E.g. A dog park finder, because its hard to find quality dog parks via google maps as it doesn't provide info about how much shade there is, if there are benches etc.
+
+## Roadmap
+[x] Phase 1
+[] Phase 2
+[] Phase 3
+[] Phase 4
+[] Phase 5
+
+Notes:
+
+## Core Features
+
+### 1. Dog park discovery 
+- Display key dog park information::
+  - Name, rating
+  - Walking distance from your location (or the venue if live location is not avilable) (in minutes)
+  - Address and basic contact info
+  - Direct link to restaurant website/menu if available
+  - Google Maps link for easy navigation
+- Simple filtering options:
+  - Distance (0.5mi, 1mi, 2mi)
+  - Rating (above 1, 2, 3, 4 or 5 stars)
+  - Features (shade, benches, dog bags provided, water) 
+- Two main views:
+  - Map view:
+    - Interactive map with dog park pins
+    - Your current location (or venue location as fallback)
+    - The live location marker on the map should be a dog emoji
+  - List view: 
+    - Filterable list with dog park cards
+
+### 2. Favourites collection 
+- Users can sign up with their email
+- "Favourite" button for each dog park
+- Show list of favourites on profile page
+
+## Technical Implementation
+
+### Database Schema
+- **Dog Parks**:
+  - id, name, address, rating, lat, lng, photoUrl, mapsUrl, websiteUrl, shade, benches, water
+- **Favourites**:
+  - id, dogParkId, notes, createdAt
+
+### APIs 
+- Google Places API to find dog parks near the users current location 
+  - set up caching to avoid API rate limits
+- Resend API for auth emails
+
+### UI
+- have a dashboard route
+- show a list view or a map view
+- the list view and map view should respond to filter toggles
+
+### Deployment
+- Custom domain is bestdogparks.com, provided by Cloudflare
+
+
+## Implementation plan
+
+### Phase 1 - Project Setup
+- Add required models to Prisma schema
+- Create reusable Prisma queries
+
+### Phase 2 - Data Fetching & Storage
+- Add required API Keys to .env 
+- Implement API integrations 
+- Add required resource routes
+
+### Phase 3 - UI Development
+- Ensure UI has all core features
+
+### Phase 4 - Polish
+- Ensure mobile responsiveness
+- Add loading state
+- Add optmistic UI
+
+### Phase 5 - Deploy
+- Deploy to Fly.io using Epic Stack's deployment pipeline
+- Connect custom domain
+
+
+## Technical Information
+
+### Tech Stack
+- **Foundation:** Kent C. Dodds' Epic Stack
+- **Frontend:**
+  - React
+  - Tailwind CSS
+  - shadcn/ui and Radix UI
+  - Zod schema validation
+  - Conform form handling
+  - remix-flat-routes file based routing
+- **Backend:** 
+  - React Router 7
+  - Server loaders, actions and resource routes
+- **Database:** 
+  - SQLite
+  - Prisma ORM with TypedSQL support
+- **Authentication:** 
+  - Epic Stack auth (GitHub OAuth)
+- **Deployment:** 
+  -Fly.io
+
+### Established rules and patterns
+#### General
+- Use react router 7 rather than remix imports
+  - returning json({}) from server functions is also deprecated, you can return the object directly
+  - use resource routes for endpoints
+
+#### File structure
+- Use '#app/..' imports instead of relative imports
+- reusable db queries live in utils/
+- place external APIs in utils/providers
+
+#### User Interface
+- Clean, responsive design using shadcn/ui components
+- Mobile-first approach
+- Implement new feature route/s in users/$user/
+- Centralize shared components 
+  - add organism components to /componenets
+  - add atoms and molecules to /components/ui
+- Loading states and optimistic UI should use suspense and promise responses from the server functions
+- Use shadcn components where possible. Only import new radix primitives when needed. Avoid importing radix components directly - they should only be used as part of components in components/ui and used in the app from there
+
+#### Deployment & Infrastructure
+- Utilize Epic Stack's Fly.io deployment pipeline
+
+#### Other
+-  Add any new/custom patterns here
