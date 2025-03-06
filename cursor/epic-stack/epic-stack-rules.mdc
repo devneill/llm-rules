@@ -1,0 +1,336 @@
+# DinnerNotOnYourOwn.com PRD
+
+**Product Vision:** 
+A practical tool for conference attendees to coordinate dinner plans in Salt Lake City, demonstrating the power of rapid development using modern tools.
+
+## Roadmap
+[x] Phase 1
+[x] Phase 2
+[x] Phase 3
+[x] Phase 4
+[] Phase 5
+
+Notes:
+
+## Core Features
+
+### 1. Restaurant Discovery
+- Display key restaurant information:
+  - Name, cuisine type, price range, rating
+  - Walking distance from your location (or the venue if live location is not avilable) (in minutes)
+  - Address and basic contact info
+  - Direct link to restaurant website/menu if available
+  - Google Maps link for easy navigation
+- Simple filtering options:
+  - Distance (0.5mi, 1mi, 2mi)
+  - Rating (above 1, 2, 3, 4 or 5 stars)
+  - Price range ($ to $$$)
+  - Cuisine type (quick filters for popular options)
+- Two main views:
+  - Map view:
+    - Interactive map with restaurant pins - the pins should show the attendee count on them
+    - The restaurant you are attending should be green
+    - Your current location (or venue location as fallback)
+    - The live location marker on the map should a koala emoji
+  - List view: 
+    - Filterable list with restaurant cards
+- Persistent header with:
+  - Countdown timer 'until you have dinner on your own'
+  - Quick filter toggle buttons
+
+### 2. Attendee Coordination
+- Users can sing up with their email
+- "Join dinner" button for each restaurant
+- Display real-time count of attendees going to each place
+- Once attending a dinner group
+  - you can add a small note/comment ("Meeting in lobby at 7pm") that other attendees can see
+  - you can leave the dinner group 
+  - you can only be a part of one dinner group at a time
+
+## Technical Implementation
+
+### Database Schema
+- **Restaurants** (cached from API):
+  - id, name, address, cuisineType, priceLevel, rating, lat, lng, photoUrl, mapsUrl, websiteUrl
+- **DinnerGroups**:
+  - id, restaurantId, notes, createdAt
+- **Attendees**:
+  - id, userId, dinnerGroupId, createdAt
+
+### APIs 
+- Google Places API to find restaurants near the users current location 
+  - set up caching to avoid API rate limits
+  - use resource routes as a proxy to keep the api key secure
+- Resend API for auth emails
+
+### UI
+- have a dashboard route
+- show a list view or a map view
+- the list view and map view should respond to filter toggles
+
+### Deployment
+- Custom domain is dinnernotonyourown.com, provided by Cloudflare
+
+
+## Implementation plan
+
+### Phase 1 - Project Setup
+- Add required models to Prisma schema
+- Create reusable Prisma queries
+
+### Phase 2 - Data Fetching & Storage
+- Add required API Keys to .env 
+- Implement API integrations 
+- Add required resource routes
+
+### Phase 3 - UI Development
+- Ensure UI has all core features
+
+### Phase 4 - Polish
+- Ensure mobile responsiveness
+- Add loading state
+- Add optmistic UI
+
+### Phase 5 - Deploy
+- Deploy to Fly.io using Epic Stack's deployment pipeline
+- Connect custom domain
+
+
+## Technical Information
+
+### Tech Stack
+- **Foundation:** Kent C. Dodds' Epic Stack
+- **Frontend:**
+  - React
+  - Tailwind CSS
+  - shadcn/ui and Radix UI
+  - Zod schema validation
+  - Conform form handling
+  - remix-flat-routes file based routing
+- **Backend:** 
+  - React Router 7
+  - Server loaders, actions and resource routes
+- **Database:** 
+  - SQLite
+  - Prisma ORM with TypedSQL support
+- **Authentication:** 
+  - Epic Stack auth (GitHub OAuth)
+- **Deployment:** 
+  -Fly.io
+
+### Established rules and patterns
+#### General
+- Use react router 7 rather than remix imports - remix is deprecated
+  - returning json({}) from server functions is also deprecated, you can return the object directly
+  - use resource routes for endpoints
+
+#### File structure
+- Use '#app/..' imports instead of relative imports
+- reusable db queries live in utils/
+- place external APIs in utils/providers
+
+#### User Interface
+- Clean, responsive design using shadcn/ui components
+- Mobile-first approach
+- Implement new feature route/s in users/$user/
+- Centralize shared components 
+  - add organism components to /componenets
+  - add atoms and molecules to /components/ui
+- Loading states and optimistic UI should use suspense and promise responses from the server functions
+- Use shadcn components where possible. Only import new radix primitives when needed. Avoid importing radix components directly - they should only be used as part of components in components/ui and used in the app from there
+
+#### Deployment & Infrastructure
+- Utilize Epic Stack's Fly.io deployment pipeline
+- Simple analytics to track usage during demo
+
+#### Other
+-  Add any new/custom patterns here
+
+
+## Project Structure
+
+```
+.
+├── app
+│   ├── assets
+│   │   └── favicons
+│   ├── components
+│   │   ├── ui
+│   │   ├── error-boundary.tsx
+│   │   ├── floating-toolbar.tsx
+│   │   ├── forms.tsx
+│   │   ├── progress-bar.tsx
+│   │   ├── restaurant-card.tsx
+│   │   ├── restaurant-map.tsx
+│   │   ├── search-bar.tsx
+│   │   ├── spacer.tsx
+│   │   ├── toaster.tsx
+│   │   └── user-dropdown.tsx
+│   ├── routes
+│   │   ├── _auth+
+│   │   ├── _marketing+
+│   │   ├── _seo+
+│   │   ├── admin+
+│   │   ├── resources+
+│   │   ├── settings+
+│   │   ├── users+
+│   │   ├── $.tsx
+│   │   └── me.tsx
+│   ├── styles
+│   │   └── tailwind.css
+│   ├── utils
+│   │   ├── providers
+│   │   ├── auth.server.ts
+│   │   ├── cache.server.ts
+│   │   ├── client-hints.tsx
+│   │   ├── connections.server.ts
+│   │   ├── connections.tsx
+│   │   ├── db.server.ts
+│   │   ├── email.server.ts
+│   │   ├── env.server.ts
+│   │   ├── extended-theme.ts
+│   │   ├── headers.server.test.ts
+│   │   ├── headers.server.ts
+│   │   ├── honeypot.server.ts
+│   │   ├── litefs.server.ts
+│   │   ├── misc.error-message.test.ts
+│   │   ├── misc.tsx
+│   │   ├── misc.use-double-check.test.tsx
+│   │   ├── monitoring.client.tsx
+│   │   ├── nonce-provider.ts
+│   │   ├── permissions.server.ts
+│   │   ├── redirect-cookie.server.ts
+│   │   ├── request-info.ts
+│   │   ├── restaurants.server.ts
+│   │   ├── session.server.ts
+│   │   ├── storage.server.ts
+│   │   ├── theme.server.ts
+│   │   ├── timing.server.ts
+│   │   ├── toast.server.ts
+│   │   ├── totp.server.ts
+│   │   ├── user-validation.ts
+│   │   ├── user.ts
+│   │   └── verification.server.ts
+│   ├── entry.client.tsx
+│   ├── entry.server.tsx
+│   ├── root.tsx
+│   └── routes.ts
+├── other
+│   ├── sly
+│   │   ├── sly.json
+│   │   └── transform-icon.ts
+│   ├── svg-icons
+│   │   ├── README.md
+│   │   ├── arrow-left.svg
+│   │   ├── arrow-right.svg
+│   │   ├── avatar.svg
+│   │   ├── camera.svg
+│   │   ├── check.svg
+│   │   ├── clock.svg
+│   │   ├── cross-1.svg
+│   │   ├── dots-horizontal.svg
+│   │   ├── download.svg
+│   │   ├── envelope-closed.svg
+│   │   ├── exit.svg
+│   │   ├── file-text.svg
+│   │   ├── github-logo.svg
+│   │   ├── laptop.svg
+│   │   ├── link-2.svg
+│   │   ├── lock-closed.svg
+│   │   ├── lock-open-1.svg
+│   │   ├── magnifying-glass.svg
+│   │   ├── moon.svg
+│   │   ├── passkey.svg
+│   │   ├── pencil-1.svg
+│   │   ├── pencil-2.svg
+│   │   ├── plus.svg
+│   │   ├── question-mark-circled.svg
+│   │   ├── reset.svg
+│   │   ├── sun.svg
+│   │   ├── trash.svg
+│   │   └── update.svg
+│   ├── Dockerfile
+│   ├── Dockerfile.dockerignore
+│   ├── README.md
+│   ├── build-icons.ts
+│   ├── build-server.ts
+│   ├── cache.db
+│   └── litefs.yml
+├── prisma
+│   ├── migrations
+│   │   ├── 20250221233640_init
+│   │   ├── 20250304121933_add_restaurant_and_dinner_models
+│   │   └── migration_lock.toml
+│   ├── sql
+│   │   └── searchUsers.sql
+│   ├── data.db
+│   ├── schema.prisma
+│   └── seed.ts
+├── public
+│   ├── favicons
+│   │   ├── README.md
+│   │   ├── android-chrome-192x192.png
+│   │   └── android-chrome-512x512.png
+│   ├── img
+│   │   └── user.png
+│   ├── favicon.ico
+│   └── site.webmanifest
+├── scripts
+│   ├── README.md
+│   └── update-structure.sh
+├── server
+│   ├── utils
+│   │   └── monitoring.ts
+│   ├── dev-server.js
+│   └── index.ts
+├── tests
+│   ├── e2e
+│   │   ├── 2fa.test.ts
+│   │   ├── error-boundary.test.ts
+│   │   ├── note-images.test.ts
+│   │   ├── onboarding.test.ts
+│   │   ├── passkey.test.ts
+│   │   └── settings-profile.test.ts
+│   ├── fixtures
+│   │   ├── email
+│   │   ├── github
+│   │   ├── images
+│   │   └── openimg
+│   ├── mocks
+│   │   ├── README.md
+│   │   ├── github.ts
+│   │   ├── index.ts
+│   │   ├── resend.ts
+│   │   ├── tigris.ts
+│   │   └── utils.ts
+│   ├── setup
+│   │   ├── custom-matchers.ts
+│   │   ├── db-setup.ts
+│   │   ├── global-setup.ts
+│   │   └── setup-test-env.ts
+│   ├── db-utils.ts
+│   ├── playwright-utils.ts
+│   └── utils.ts
+├── types
+│   ├── deps.d.ts
+│   ├── env.env.d.ts
+│   ├── icon-name.d.ts
+│   └── reset.d.ts
+├── README.md
+├── components.json
+├── eslint.config.js
+├── fly.toml
+├── index.js
+├── mise.toml
+├── package-lock.json
+├── package.json
+├── playwright.config.ts
+├── postcss.config.js
+├── react-router.config.ts
+├── tailwind.config.ts
+├── tsconfig.json
+└── vite.config.ts
+
+41 directories, 139 files
+```
+
